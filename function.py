@@ -582,7 +582,11 @@ class Pipe:
                             "type": "text",
                             "text": item.get("text", "")
                         })
-                    # Add image/document processing here if needed
+                    elif item_type == "image_url":
+                        # Transform OpenAI format to Anthropic format
+                        transformed = self._transform_image_content(item)
+                        processed_content.append(transformed)
+                        logger.debug("Transformed image_url to Anthropic image format")
                     else:
                         # Pass through other types as-is
                         processed_content.append(item)
