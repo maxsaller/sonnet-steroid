@@ -501,6 +501,69 @@ class Pipe:
 
         return payload
 
+    def _transform_image_content(self, item: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Transform OpenAI image_url format to Anthropic image format.
+
+        Handles:
+        - Base64 data URLs (data:image/png;base64,...)
+        - Regular HTTP/HTTPS URLs
+
+        Args:
+            item: Content item with type="image_url"
+
+        Returns:
+            Transformed content item with type="image"
+        """
+        # Extract URL from nested structure
+        image_url_obj = item.get("image_url", {})
+        url = image_url_obj.get("url", "")
+
+        if not url:
+            logger.warning("Image content missing URL, passing through as-is")
+            return item
+
+        # Check if it's a data URL (base64)
+        if url.startswith("data:"):
+            # Parse: data:image/png;base64,iVBORw0K...
+            try:
+                # Split into parts
+                header, data = url.split(",", 1)
+                # Extract media type (e.g., "image/png")
+                media_type = header.split(";")[0].split(":")[1]
+
+                logger.debug(f"Transformed base64 image with media_type={media_type}")
+                return {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": media_type,
+                        "data": data
+                    }
+                }
+            except (ValueError, IndexError) as e:
+                logger.warning(f"Malformed data URL: {e}, defaulting to image/jpeg")
+                # Fallback: try to extract just the data part
+                data = url.split(",", 1)[-1] if "," in url else ""
+                return {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg",
+                        "data": data
+                    }
+                }
+        else:
+            # Regular URL
+            logger.debug(f"Transformed URL image: {url[:50]}...")
+            return {
+                "type": "image",
+                "source": {
+                    "type": "url",
+                    "url": url
+                }
+            }
+
     def _process_messages(
         self, messages: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
