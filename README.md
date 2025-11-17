@@ -13,6 +13,7 @@
 - **💾 Prompt Caching** - Up to 90% cost savings with automatic cache breakpoints
 - **📚 Citations** - Clickable citation chips from web search results
 - **🛠️ Skills & Code** - Pre-built skills (Excel, PowerPoint, Word, PDF) + custom skill support
+- **🖼️ Image Support** - Paste images directly into chat for multimodal interactions
 - **🎨 Clean UX** - Collapsible sections, streaming responses, minimal design
 
 ## 🚀 Quick Start
