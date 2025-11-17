@@ -1,7 +1,7 @@
 """
-title: Claude Sonnet 4.5 Complete v4
+title: Claude Sonnet 4.5 Complete v4.1
 author: Enhanced by AI
-version: 4.0.0
+version: 4.1.0
 license: MIT
 description: Production-ready Claude Sonnet 4.5 with <think> tags for reasoning, web search, skills, and clean UX
 requirements: requests, pydantic
